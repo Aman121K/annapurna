@@ -47,7 +47,7 @@ function LeftMenu({ active }) {
         >
           Payments
         </button>
-        <button
+        {/* <button
           className={active === "collections" ? "active" : ""}
           onClick={() => navigate("/collections")}
         >
@@ -65,6 +65,7 @@ function LeftMenu({ active }) {
         >
           Vendors
         </button>
+      </div> */}
       </div>
       <div>
         <button onClick={() => signout()}>Sign Out</button>

@@ -1,27 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../Firebase";
+import db, { auth } from "../../Firebase";
 
 import "./Login.css";
 
 function Login() {
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [allUserData,setAllUserdata]=useState([]);
+  useLayoutEffect(()=>{
+    getAllUser()
+  },[])
+   const getAllUser=()=>{
+    let tmp=[];
+    db.collection("users")
+    .get()
+    .then((allproducts) => {
+      allproducts.docs.map((product) => {
+        tmp.push({ id: product.id, ...product.data() });
+      });
+      console.log(tmp);
+      setAllUserdata(tmp);
+    });
+  }
+  const getUserDetails = (userId) => {
+    const user = users.find((user) => user.id === userId);
+    return user || null; // Return the user object or null if not found
+  };
 
   const logintapped = () => {
     if (email === "" || password === "") {
       alert("Please enter Email and Password");
     } else {
-      auth
-        .signInWithEmailAndPassword(email, password)
-        .then((user) => {
-          navigate("/home");
-        })
-        .catch((err) => {
-          alert("Login Failed");
-        });
+     
     }
   };
 
