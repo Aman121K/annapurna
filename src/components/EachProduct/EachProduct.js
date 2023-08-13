@@ -2,22 +2,41 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import db, { auth } from "../../Firebase";
 import LeftMenu from "../LeftMenu/LeftMenu";
+import { getLocalStorageItem } from "../../content/helper";
 import "./EachProduct.css";
 
 function EachProduct() {
+  const orderStatus = [
+    "Completed",
+    "Initated",
+    "Failed",
+    "Patirallly_Complete",
+    "cancelled",
+  ];
   const { productId } = useParams();
   const navigate = useNavigate();
 
-  const [productName, setProductName] = useState("");
-  const [unit, setUnit] = useState("");
+  const [formData, setFormData] = useState({
+    productName: "",
+    unit: "",
+    perUnitPrice: "",
+    totalPrice: "",
+    stock: 0,
+    receivedQuantity: "",
+    vendor: "",
+    status: orderStatus[0],
+  });
+  const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
+    const userData = getLocalStorageItem("userData");
+    setUserRole(userData?.role);
   }, []);
 
   useEffect(() => {
@@ -26,47 +45,69 @@ function EachProduct() {
         .doc(productId)
         .get()
         .then((product) => {
-          setProductName(product.data().name);
-          setUnit(product.data().unit);
+          const data = product.data();
+          console.log("receied data..", data);
+          setFormData({
+            ...formData,
+            productName: data.name,
+            unit: data.unitOfMeasurement,
+            perUnitPrice: data.perUnitPrice,
+            totalPrice: data.totalPrice,
+            receivedQuantity: data.receivedStock,
+            stock: data.stock,
+            vendor: data.vendor,
+          });
+          // setProductName(product.data().name);
+          // setUnit(product.data().unit);
         });
     }
   }, []);
 
   const saveproduct = () => {
+    console.log("formData...", formData);
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime / 1000);
-    if (productName == "" || unit == "") {
+    if (!formData?.productName || !formData?.unit) {
       alert("Please enter both product name and unit");
       return;
     }
+    const productData = {
+      createdOn: timestamp,
+      name: formData.productName,
+      perUnitPrice: formData?.perUnitPrice,
+      receivedStock: formData?.receivedQuantity,
+      status: formData?.status,
+      stock: formData?.stock,
+      totalPrice: parseInt(formData?.totalPrice),
+      unitOfMeasurement: formData.unit,
+      vendor: formData?.vendor,
+    };
     if (productId === "new") {
       const newProdId = db.collection("products").doc().id;
       db.collection("products")
         .doc(newProdId)
-        .set({
-          name: productName,
-          unit: unit,
-          createdOn: timestamp,
-          price: 0,
-          stock: 0,
-          units: 0,
-        })
+        .set(productData)
         .then((product) => {
           alert("Product Added");
         });
     } else {
       db.collection("products")
         .doc(productId)
-        .update({
-          name: productName,
-          unit: unit,
-          createdOn: timestamp,
-        })
+        .update(productData)
         .then((product) => {
           alert("Product Updated");
         });
     }
   };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   return (
     <div className="eachproducts">
       <LeftMenu />
@@ -74,18 +115,85 @@ function EachProduct() {
         <h4>Enter Product Details</h4>
         <h5>Product Name</h5>
         <input
+          disabled={userRole === "staff"}
+          name="productName"
           type="text"
           placeholder="Product Name"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
+          value={formData?.productName}
+          onChange={handleInputChange}
         />
         <h5>Unit of measurement</h5>
         <input
+          disabled={userRole === "staff"}
+          name="unit"
           type="text"
           placeholder="Unit"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
+          value={formData.unit}
+          onChange={handleInputChange}
         />
+        {userRole !== "staff" && (
+          <>
+            <h5>Per Unit Price</h5>
+            <input
+              name="perUnitPrice"
+              type="text"
+              placeholder="Per Unit Price"
+              value={formData.perUnitPrice}
+              onChange={handleInputChange}
+            />
+          </>
+        )}
+
+        {userRole !== "staff" && (
+          <>
+            <h5>Total Price</h5>
+            <input
+              name="totalPrice"
+              type="text"
+              placeholder="Total Price"
+              value={formData.totalPrice}
+              onChange={handleInputChange}
+            />
+          </>
+        )}
+        <h5>Received Quantity</h5>
+        <input
+          name="receivedQuantity"
+          type="text"
+          placeholder="Received Quantity"
+          value={formData.receivedQuantity}
+          onChange={handleInputChange}
+        />
+        <h5>Stock</h5>
+        <input
+          name="stock"
+          type="text"
+          placeholder="Stock"
+          value={formData.stock}
+          onChange={handleInputChange}
+        />
+        <h5>Vendor</h5>
+        <input
+          disabled={userRole === "staff"}
+          name="vendor"
+          type="text"
+          placeholder="Vendor"
+          value={formData.vendor}
+          onChange={handleInputChange}
+        />
+
+        <h5>Status</h5>
+        <select
+          name="status"
+          value={formData?.status}
+          onChange={handleInputChange}
+        >
+          {orderStatus?.map((item, idx) => (
+            <option key={idx} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
         <button onClick={saveproduct}>Save</button>
       </div>
     </div>

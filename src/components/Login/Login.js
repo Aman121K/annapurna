@@ -3,30 +3,30 @@ import { useNavigate } from "react-router-dom";
 import db, { auth } from "../../Firebase";
 
 import "./Login.css";
+import { setLocalStorageItem } from "../../content/helper";
 
 function Login() {
-
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [allUserData,setAllUserdata]=useState([]);
-  useLayoutEffect(()=>{
-    getAllUser()
-  },[])
-   const getAllUser=()=>{
-    let tmp=[];
+  const [allUserData, setAllUserdata] = useState([]);
+  useLayoutEffect(() => {
+    getAllUser();
+  }, []);
+  const getAllUser = () => {
+    let tmp = [];
     db.collection("users")
-    .get()
-    .then((allproducts) => {
-      allproducts.docs.map((product) => {
-        tmp.push({ id: product.id, ...product.data() });
+      .get()
+      .then((users) => {
+        users.docs.map((userData) => {
+          tmp.push({ id: userData.id, ...userData.data() });
+        });
+        console.log(tmp);
+        setAllUserdata(tmp);
       });
-      console.log(tmp);
-      setAllUserdata(tmp);
-    });
-  }
+  };
   const getUserDetails = (userId) => {
-    const user = users.find((user) => user.id === userId);
+    const user = allUserData.find((user) => user.id === userId);
     return user || null; // Return the user object or null if not found
   };
 
@@ -34,7 +34,14 @@ function Login() {
     if (email === "" || password === "") {
       alert("Please enter Email and Password");
     } else {
-     
+      const isUserValid = allUserData?.filter((user) => {
+        return user.email == email && user.password == password;
+      });
+
+      if (isUserValid.length > 0) {
+        setLocalStorageItem("userData", isUserValid[0]);
+        navigate("/home");
+      }
     }
   };
 

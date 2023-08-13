@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../Firebase";
 import "./LeftMenu.css";
+import { getLocalStorageItem } from "../../content/helper";
 
 function LeftMenu({ active }) {
+  const [role, setRole] = useState("");
+  useEffect(() => {
+    const userData = getLocalStorageItem("userData");
+    setRole(userData.role);
+  }, []);
   const navigate = useNavigate();
 
   const signout = () => {
@@ -12,7 +18,7 @@ function LeftMenu({ active }) {
     });
   };
 
-  console.log("activee>>",active)
+  console.log("activee>>", active);
 
   return (
     <div className="leftmenu">
@@ -29,24 +35,29 @@ function LeftMenu({ active }) {
         >
           Products
         </button>
-        <button
-          className={active === "orders" ? "active" : ""}
-          onClick={() => navigate("/orders")}
-        >
-          Purchase Orders
-        </button>
-        <button
-          className={active === "orderssales" ? "active" : ""}
-          onClick={() => navigate("/orderssales")}
-        >
-          Sales Orders
-        </button>
-        <button
-          className={active === "payments" ? "active" : ""}
-          onClick={() => navigate("/payments")}
-        >
-          Payments
-        </button>
+        {/* ordered products to be shown to staff */}
+        {/* {role === "admin" ? ( */}
+        <>
+          <button
+            className={active === "orders" ? "active" : ""}
+            onClick={() => navigate("/orders")}
+          >
+            Purchase Orders
+          </button>
+          <button
+            className={active === "orderssales" ? "active" : ""}
+            onClick={() => navigate("/orderssales")}
+          >
+            Sales Orders
+          </button>
+          <button
+            className={active === "payments" ? "active" : ""}
+            onClick={() => navigate("/payments")}
+          >
+            Payments
+          </button>
+        </>
+        {/* ) : null} */}
         {/* <button
           className={active === "collections" ? "active" : ""}
           onClick={() => navigate("/collections")}

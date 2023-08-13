@@ -13,12 +13,12 @@ function Vendors() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
   }, []);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function Vendors() {
         allproducts.docs.map((product) => {
           tmp.push({ id: product.id, ...product.data() });
         });
-        console.log("vendor list>",tmp)
+        console.log("vendor list>", tmp);
         setAllProducts(tmp);
         setAllFilteredProducts(tmp);
       });

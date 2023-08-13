@@ -12,12 +12,12 @@ function Orders({ type }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
   }, []);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function Orders({ type }) {
                 <h4 id="blankspace"></h4>
               </div>
               {allFilteredOrders.map((prod) => {
-                console.log(prod)
+                console.log(prod);
                 return (
                   <div className="eachorder">
                     {type === "P" ? (

@@ -11,12 +11,12 @@ function EachCustomer() {
   const [productName, setProductName] = useState("");
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
   }, []);
 
   useEffect(() => {

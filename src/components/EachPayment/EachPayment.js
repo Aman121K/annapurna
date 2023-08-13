@@ -18,12 +18,12 @@ function EachPayment() {
   const [paidToId, setPaidToId] = useState("");
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
   }, []);
 
   useEffect(() => {

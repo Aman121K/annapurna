@@ -18,6 +18,13 @@
   border: 2px solid black;
   display: block;
 }
+.eachproductsregion select {
+  width: 323px !important;
+  padding: 10px !important;
+  border-radius: 5px !important;
+  border: 2px solid black !important;
+  display: block !important;
+}
 
 .eachproductsregion button {
   background-color: black;

@@ -26,12 +26,12 @@ function EachOrder() {
   const [openCustomer, setOpenCustomer] = useState(false);
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
   }, []);
 
   useEffect(() => {
@@ -381,12 +381,12 @@ function EachOrder() {
     setOrderProducts(newArray);
   };
   const handleClose = () => {
-    setopenVendor(!openVendor)
-  }
+    setopenVendor(!openVendor);
+  };
 
   const handleClose1 = () => {
-    setOpenCustomer(!openCustomer)
-  }
+    setOpenCustomer(!openCustomer);
+  };
 
   return (
     <div className="eachproducts">
@@ -439,35 +439,35 @@ function EachOrder() {
           </div>
           {orderType === "S" && (
             <>
-            <div>
-              <h5>Customer Name</h5>
-              <select
-                onChange={(e) => {
-                  setCustomerName(
-                    dropDownItems.filter(
-                      (item) => item.id === e.target.value
-                    )[0]?.name
-                  );
-                  setCustomerId(e.target.value);
-                }}
-              >
-                {dropDownItems.map((eachitem) => {
-                  return (
-                    <option
-                      value={eachitem.id}
-                      selected={customerName === eachitem.name}
-                    >
-                      {eachitem.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-             <div onClick={() => setOpenCustomer(!openCustomer)}>Add Customer</div>
-             </>
+              <div>
+                <h5>Customer Name</h5>
+                <select
+                  onChange={(e) => {
+                    setCustomerName(
+                      dropDownItems.filter(
+                        (item) => item.id === e.target.value
+                      )[0]?.name
+                    );
+                    setCustomerId(e.target.value);
+                  }}
+                >
+                  {dropDownItems.map((eachitem) => {
+                    return (
+                      <option
+                        value={eachitem.id}
+                        selected={customerName === eachitem.name}
+                      >
+                        {eachitem.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              <div onClick={() => setOpenCustomer(!openCustomer)}>
+                Add Customer
+              </div>
+            </>
           )}
-
-         
 
           <AddCustomerModal open={openCustomer} handleClose={handleClose1} />
 
@@ -516,7 +516,6 @@ function EachOrder() {
           )} */}
           <div></div>
         </div>
-
 
         <VendorAddModal open={openVendor} handleClose={handleClose} />
 

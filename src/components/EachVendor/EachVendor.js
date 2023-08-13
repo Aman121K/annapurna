@@ -11,12 +11,12 @@ function EachVendor() {
   const [productName, setProductName] = useState("");
 
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-      } else {
-        navigate("/");
-      }
-    });
+    // auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //   } else {
+    //     navigate("/");
+    //   }
+    // });
   }, []);
 
   useEffect(() => {
@@ -31,14 +31,13 @@ function EachVendor() {
   }, []);
 
   const saveproduct = () => {
-
     const dateTime = Date.now();
     const timestamp = Math.floor(dateTime / 1000);
     if (productName == "") {
       alert("Please enter vendor name");
       return;
     }
-    console.log(productId,"prid")
+    console.log(productId, "prid");
     if (productId === "new") {
       const newProdId = db.collection("vendors").doc().id;
       db.collection("vendors")
