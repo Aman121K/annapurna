@@ -46,7 +46,7 @@ function EachProduct() {
         .get()
         .then((product) => {
           const data = product.data();
-          console.log("receied data..", data);
+          // console.log("receied data..", data);
           setFormData({
             ...formData,
             productName: data.name,

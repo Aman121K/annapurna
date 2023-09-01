@@ -102,7 +102,7 @@ function Products() {
                   userRole === "staff" &&
                   !staffAllowedStatuses.includes(prod.status)
                 ) {
-                  return null; // Don't render this product for staff with disallowed status
+                  return null;
                 } else if (
                   userRole === "account" &&
                   !accountAllowedStatuses.includes(prod.status)
