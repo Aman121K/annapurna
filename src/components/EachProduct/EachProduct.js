@@ -56,6 +56,7 @@ function EachProduct() {
             receivedQuantity: data.receivedStock,
             stock: data.stock,
             vendor: data.vendor,
+            status: data.status,
           });
           // setProductName(product.data().name);
           // setUnit(product.data().unit);

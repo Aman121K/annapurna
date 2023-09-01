@@ -60,12 +60,17 @@ function Products() {
       <LeftMenu active="products" />
       <div className="productsregion">
         <div className="addandfilter">
-          {userRole !== "staff" ||
+          {/* {userRole !== "staff" ||
             (userRole !== "account" && (
               <button onClick={() => navigate(`/product/new`)}>
                 Add New Product
               </button>
-            ))}
+            ))} */}
+          {userRole === "admin" && (
+            <button onClick={() => navigate(`/product/new`)}>
+              Add New Product
+            </button>
+          )}
           <input
             type="text"
             placeholder="Search Here"
@@ -81,6 +86,7 @@ function Products() {
                 <h4>Stock</h4>
                 <h4>Received Stock</h4>
                 <h4>Unit of Measurement</h4>
+                <h4>Remaining Stock</h4>
                 {userRole !== "staff" && (
                   <>
                     <h4>Per uinit Price</h4>
@@ -91,6 +97,7 @@ function Products() {
                 <h4>Date</h4>
               </div>
               {allFilteredProducts.map((prod) => {
+                let remaining = prod.stock - prod.receivedStock;
                 if (
                   userRole === "staff" &&
                   !staffAllowedStatuses.includes(prod.status)
@@ -108,6 +115,7 @@ function Products() {
                     <h4>{prod.stock}</h4>
                     <h4>{prod.receivedStock}</h4>
                     <h4>{prod.unitOfMeasurement}</h4>
+                    <h4>{remaining}</h4>
                     {userRole !== "staff" && (
                       <>
                         <h4>Rs {prod.perUnitPrice || 0}</h4>
