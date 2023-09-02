@@ -5,6 +5,9 @@ import LeftMenu from "../LeftMenu/LeftMenu";
 import "./Products.css";
 import { realDate } from "../../content/helper";
 import { getLocalStorageItem } from "../../content/helper";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
 
 function Products() {
   const [allProducts, setAllProducts] = useState([]);
@@ -16,6 +19,7 @@ function Products() {
 
   useEffect(() => {
     const userData = getLocalStorageItem("userData");
+    console.log(userData.role);
     setUserRole(userData?.role);
 
     // auth.onAuthStateChanged((user) => {
@@ -55,6 +59,55 @@ function Products() {
   const staffAllowedStatuses = ["Completed", "Initated", "Patirallly_Complete"];
   const accountAllowedStatuses = ["Completed", "Patirallly_Complete"];
 
+  const priceBodyTemplate = (allProducts) => {
+    return realDate(allProducts.createdOn);
+  };
+
+  const remainingStock = (allProducts) => {
+    return allProducts.stock - allProducts.receivedStock;
+  };
+
+  const perUntiPrice = (allProducts) => {
+    if (userRole !== "staff") {
+      return allProducts.perUnitPrice;
+    }
+  };
+
+  const totalPrice = (allProducts) => {
+    if (userRole !== "staff") {
+      return allProducts.totalPrice;
+    }
+  };
+
+  const buttonTemplate = (allProducts) => {
+    return (
+      <>
+        <div className="actionButtons">
+          <Button
+            onClick={() => navigate(`/product/${allProducts.id}`)}
+            label="Edit Product"
+            outlined
+            size="small"
+          />{" "}
+          <Button
+            onClick={() => navigate(`/product/${allProducts.id}`)}
+            label="View Product"
+            outlined
+            size="small"
+          />
+        </div>
+      </>
+    );
+  };
+
+  const filteredProducts = allFilteredProducts.filter((prod) => {
+    if (userRole === "staff") {
+      return staffAllowedStatuses.includes(prod.status);
+    } else if (userRole === "account") {
+      return accountAllowedStatuses.includes(prod.status);
+    }
+    return true; // Show all products for admin role
+  });
   return (
     <div className="products">
       <LeftMenu active="products" />
@@ -79,65 +132,41 @@ function Products() {
           />
         </div>
         <div>
-          {allProducts.length > 0 && (
-            <div className="productslist">
-              <div className="eachproduct highlight">
-                <h4>Product Name</h4>
-                <h4>Stock</h4>
-                <h4>Received Stock</h4>
-                <h4>Unit of Measurement</h4>
-                <h4>Remaining Stock</h4>
-                {userRole !== "staff" && (
-                  <>
-                    <h4>Per uinit Price</h4>
-                    <h4>Total Price</h4>
-                  </>
-                )}
-                <h4>Status</h4>
-                <h4>Date</h4>
-              </div>
-              {allFilteredProducts.map((prod) => {
-                let remaining = prod.stock - prod.receivedStock;
-                if (
-                  userRole === "staff" &&
-                  !staffAllowedStatuses.includes(prod.status)
-                ) {
-                  return null;
-                } else if (
-                  userRole === "account" &&
-                  !accountAllowedStatuses.includes(prod.status)
-                ) {
-                  return null;
-                }
-                return (
-                  <div className="eachproduct">
-                    <h4>{prod.name}</h4>
-                    <h4>{prod.stock}</h4>
-                    <h4>{prod.receivedStock}</h4>
-                    <h4>{prod.unitOfMeasurement}</h4>
-                    <h4>{remaining}</h4>
-                    {userRole !== "staff" && (
-                      <>
-                        <h4>Rs {prod.perUnitPrice || 0}</h4>
-                        <h4>Rs {prod.totalPrice || 0}</h4>
-                      </>
-                    )}
-                    <h4>{prod.status}</h4>
-                    <h4>{realDate(prod?.createdOn)}</h4>
-                    <button
-                      style={{ marginRight: 10 }}
-                      onClick={() => navigate(`/product/${prod.id}`)}
-                    >
-                      Edit Product
-                    </button>
-                    <button onClick={() => navigate(`/product/${prod.id}`)}>
-                      View Product
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <DataTable
+            value={filteredProducts}
+            tableStyle={{ minWidth: "50rem" }}
+          >
+            <Column field="name" header="Product Name"></Column>
+            <Column field="stock" header="Stock"></Column>
+            <Column field="receivedStock" header="Received Stock"></Column>
+            <Column
+              field="unitOfMeasurement"
+              header="Unit of Measurement"
+            ></Column>
+            <Column
+              field="quantity"
+              header="Remaining Stock"
+              body={remainingStock}
+            ></Column>
+            <Column
+              field="perUnitPrice"
+              header="Per uinit Price"
+              body={perUntiPrice}
+            ></Column>
+            <Column
+              field="totalPrice"
+              header="Total Price"
+              body={totalPrice}
+            ></Column>
+            <Column field="status" header="Status"></Column>
+
+            <Column
+              field="createdOn"
+              header="Date"
+              body={priceBodyTemplate}
+            ></Column>
+            <Column field="actions" body={buttonTemplate}></Column>
+          </DataTable>
         </div>
       </div>
     </div>

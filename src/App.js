@@ -22,6 +22,10 @@ import Vendors from "./components/Vendors/Vendors";
 import EachCustomer from "./components/EachCustomer/EachCustomer";
 import EachVendor from "./components/EachVendor/EachVendor";
 import Ledger from "./components/Ledger/Ledger";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+// import "primeicons/primeicons.css";
+// import "primeflex/primeflex.css";
 
 function App() {
   return (

@@ -152,8 +152,9 @@ function EachProduct() {
               name="totalPrice"
               type="text"
               placeholder="Total Price"
-              value={formData.totalPrice}
-              onChange={handleInputChange}
+              value={formData.perUnitPrice * formData.stock}
+              // onChange={handleInputChange}
+              disabled={true}
             />
           </>
         )}
