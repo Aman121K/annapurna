@@ -46,7 +46,7 @@ function EachProduct() {
         .get()
         .then((product) => {
           const data = product.data();
-          console.log("receied data..", data);
+          // console.log("receied data..", data);
           setFormData({
             ...formData,
             productName: data.name,
@@ -56,6 +56,7 @@ function EachProduct() {
             receivedQuantity: data.receivedStock,
             stock: data.stock,
             vendor: data.vendor,
+            status: data.status,
           });
           // setProductName(product.data().name);
           // setUnit(product.data().unit);
