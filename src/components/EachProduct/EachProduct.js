@@ -52,7 +52,7 @@ function EachProduct() {
             productName: data.name,
             unit: data.unitOfMeasurement,
             perUnitPrice: data.perUnitPrice,
-            totalPrice: data.totalPrice,
+            totalPrice: parseInt(data.totalPrice),
             receivedQuantity: data.receivedStock,
             stock: data.stock,
             vendor: data.vendor,
@@ -101,8 +101,26 @@ function EachProduct() {
     }
   };
 
+  useEffect(() => {
+    const perUnitPrice = parseFloat(formData.perUnitPrice);
+    const stock = parseInt(formData.stock);
+
+    if (!isNaN(perUnitPrice) && !isNaN(stock)) {
+      setFormData({
+        ...formData,
+        totalPrice: (perUnitPrice * stock).toFixed(2),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        totalPrice: "",
+      });
+    }
+  }, [formData.perUnitPrice, formData.stock]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log("name...", name, "value...", value);
     setFormData({
       ...formData,
       [name]: value,
@@ -152,8 +170,10 @@ function EachProduct() {
               name="totalPrice"
               type="text"
               placeholder="Total Price"
-              value={formData.perUnitPrice * formData.stock}
-              // onChange={handleInputChange}
+              value={
+                parseInt(formData.perUnitPrice) * parseInt(formData.stock) || 0
+              }
+              onChange={handleInputChange}
               disabled={true}
             />
           </>
@@ -165,6 +185,7 @@ function EachProduct() {
           placeholder="Received Quantity"
           value={formData.receivedQuantity}
           onChange={handleInputChange}
+          disabled={userRole !== "staff"}
         />
         <h5>Stock</h5>
         <input

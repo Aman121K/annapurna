@@ -133,6 +133,8 @@ function Products() {
         </div>
         <div>
           <DataTable
+            scrollable={true}
+            scrollHeight="70vh"
             value={filteredProducts}
             tableStyle={{ minWidth: "50rem" }}
           >
